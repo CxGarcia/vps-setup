@@ -1,0 +1,25 @@
+---
+- name: Installing Zsh and git
+  apt: pkg=zsh,git state=latest
+  register: installation
+  become: true
+
+- name: Check if .zshrc exists
+  stat:
+    path: '/{{ home_path }}/.zshrc'
+  register: stat_rc_result
+
+- name: Check if .oh-my-zsh exists
+  stat:
+    path: '/{{ home_path }}/.oh-my-zsh'
+  register: stat_oh_my_zsh_result
+
+- name: Cloning oh-my-zsh
+  git: repo=https://github.com/robbyrussell/oh-my-zsh
+    dest='/{{ home_path }}/.oh-my-zsh'
+  when: not stat_oh_my_zsh_result.stat.exists
+
+- name: Set default shell
+  user:
+    name: '{{ remote_user }}'
+    shell: /bin/zsh

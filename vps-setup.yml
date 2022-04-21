@@ -1,0 +1,6 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - { role: setup, tags: ['setup'] }
+    - { role: oh-my-zsh, tags: ['oh-my-zsh'] }
